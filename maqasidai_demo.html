@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaqasidAI — AI Governance Infrastructure for Islamic Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D1117;
+    --ink-soft: #2A2F3A;
+    --ink-muted: #6B7280;
+    --parchment: #F7F4EE;
+    --parchment-deep: #EDE8DF;
+    --gold: #B8922A;
+    --gold-light: #D4A843;
+    --emerald: #0F5132;
+    --emerald-light: #1A7A4A;
+    --crimson: #8B1A1A;
+    --crimson-light: #C0392B;
+    --slate: #374151;
+    --border: rgba(13,17,23,0.1);
+    --border-gold: rgba(184,146,42,0.3);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ───────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  .hero-texture {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 50%, rgba(184,146,42,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(15,81,50,0.12) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .hero-nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--parchment);
+    letter-spacing: 0.02em;
+  }
+
+  .logo span {
+    color: var(--gold-light);
+  }
+
+  .hero-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0.4rem 0.9rem;
+    border-radius: 2px;
+  }
+
+  .hero-body {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 4rem 2rem;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--parchment);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: rgba(247,244,238,0.6);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-stat-row {
+    display: flex;
+    gap: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .hero-stat {
+    border-left: 2px solid var(--gold);
+    padding-left: 1rem;
+  }
+
+  .hero-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--parchment);
+    line-height: 1;
+  }
+
+  .hero-stat-label {
+    font-size: 0.75rem;
+    color: rgba(247,244,238,0.45);
+    letter-spacing: 0.05em;
+    margin-top: 0.3rem;
+  }
+
+  .hero-footer {
+    position: relative;
+    z-index: 10;
+    padding: 1.5rem 4rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .scroll-cue {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--gold-light);
+    animation: slideLine 2s ease-in-out infinite;
+  }
+
+  /* ── SECTION SHELL ──────────────────────────────────── */
+  .section {
+    padding: 6rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+
+  .section-body {
+    font-size: 1rem;
+    color: var(--ink-soft);
+    max-width: 640px;
+    line-height: 1.75;
+  }
+
+  /* ── ARCHITECTURE ───────────────────────────────────── */
+  .arch-section {
+    background: var(--ink);
+    padding: 6rem 4rem;
+  }
+
+  .arch-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .arch-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 1rem;
+  }
+
+  .arch-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300;
+    color: var(--parchment);
+    margin-bottom: 0.75rem;
+  }
+
+  .arch-sub {
+    font-size: 0.95rem;
+    color: rgba(247,244,238,0.45);
+    max-width: 520px;
+    margin-bottom: 4rem;
+    line-height: 1.7;
+  }
+
+  .arch-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .arch-stack::before {
+    content: '';
+    position: absolute;
+    left: 2.5rem;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+    opacity: 0.3;
+  }
+
+  .arch-layer {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 2rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: default;
+  }
+
+  .arch-layer:last-child { border-bottom: none; }
+
+  .arch-layer:hover { background: rgba(255,255,255,0.02); }
+
+  .arch-layer-num {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.25rem;
+  }
+
+  .layer-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid;
+    position: relative;
+    z-index: 2;
+    background: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .layer-dot.omnix { border-color: #7C9FF5; }
+  .layer-dot.maci { border-color: var(--gold-light); }
+  .layer-dot.hdi { border-color: #6BCB8B; }
+
+  .layer-num-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.2);
+    margin-top: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .arch-layer-content {}
+
+  .arch-layer-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .arch-layer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--parchment);
+  }
+
+  .arch-layer-org {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .arch-layer-question {
+    font-size: 0.8rem;
+    font-family: 'DM Mono', monospace;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    letter-spacing: 0.03em;
+  }
+
+  .arch-layer-question.omnix { background: rgba(124,159,245,0.1); color: #7C9FF5; }
+  .arch-layer-question.maci { background: rgba(184,146,42,0.1); color: var(--gold-light); }
+  .arch-layer-question.hdi { background: rgba(107,203,139,0.1); color: #6BCB8B; }
+
+  .arch-layer-desc {
+    font-size: 0.9rem;
+    color: rgba(247,244,238,0.5);
+    line-height: 1.65;
+    max-width: 580px;
+  }
+
+  /* ── DEMO ───────────────────────────────────────────── */
+  .demo-section {
+    padding: 6rem 4rem;
+    background: var(--parchment-deep);
+  }
+
+  .demo-inner { max-width: 1100px; margin: 0 auto; }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .demo-case {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .demo-case:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+
+  .demo-case.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold), 0 8px 32px rgba(184,146,42,0.1);
+  }
+
+  .demo-case-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .demo-case-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .demo-verdict {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+
+  .demo-verdict.flagged { background: rgba(139,26,26,0.08); color: var(--crimson-light); border: 1px solid rgba(139,26,26,0.15); }
+  .demo-verdict.pass { background: rgba(15,81,50,0.08); color: var(--emerald-light); border: 1px solid rgba(15,81,50,0.15); }
+  .demo-verdict.blocked { background: rgba(139,26,26,0.15); color: var(--crimson); border: 1px solid rgba(139,26,26,0.25); }
+  .demo-verdict.uncertain { background: rgba(107,114,128,0.08); color: var(--ink-muted); border: 1px solid rgba(107,114,128,0.2); }
+
+  .demo-case-body {
+    padding: 1.5rem;
+  }
+
+  .demo-input-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .demo-result { display: none; }
+  .demo-result.visible { display: block; }
+
+  .demo-violation {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .violation-class {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  .violation-class.riba { color: var(--crimson-light); }
+  .violation-class.pass { color: var(--emerald-light); }
+  .violation-class.fabricated { color: var(--crimson); }
+  .violation-class.gharar { color: #D97706; }
+
+  .violation-severity {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .severity-critical { background: rgba(139,26,26,0.1); color: var(--crimson); }
+  .severity-none { background: rgba(15,81,50,0.08); color: var(--emerald-light); }
+  .severity-high { background: rgba(217,119,6,0.1); color: #D97706; }
+
+  .demo-rationale {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-top: 0.75rem;
+  }
+
+  .demo-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    opacity: 0.7;
+  }
+
+  .run-btn {
+    display: block;
+    width: 100%;
+    margin-top: 3rem;
+    padding: 1rem 2rem;
+    background: var(--ink);
+    color: var(--parchment);
+    border: none;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .run-btn:hover { background: var(--slate); }
+
+  /* ── GAP TABLE ──────────────────────────────────────── */
+  .gap-section {
+    padding: 6rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .gap-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2.5rem;
+    font-size: 0.875rem;
+  }
+
+  .gap-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding: 0.75rem 1.25rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    font-weight: 400;
+  }
+
+  .gap-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-soft);
+    vertical-align: middle;
+    line-height: 1.5;
+  }
+
+  .gap-table tr:last-child td { border-bottom: none; }
+  .gap-table tr:hover td { background: rgba(0,0,0,0.015); }
+
+  .gap-table td:first-child {
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .check { color: var(--emerald-light); font-size: 1rem; }
+  .cross { color: var(--crimson-light); font-size: 1rem; }
+  .partial { color: #D97706; font-size: 0.8rem; font-family: 'DM Mono', monospace; }
+
+  .highlight-row td { background: rgba(184,146,42,0.04); }
+  .highlight-row td:first-child { color: var(--gold); }
+
+  /* ── CONTEXT ────────────────────────────────────────── */
+  .context-section {
+    background: var(--ink);
+    padding: 6rem 4rem;
+  }
+
+  .context-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .context-text .section-title {
+    color: var(--parchment);
+    margin-bottom: 1.5rem;
+  }
+
+  .context-text .section-body {
+    color: rgba(247,244,238,0.55);
+    margin-bottom: 2rem;
+  }
+
+  .context-text .section-label { color: var(--gold-light); }
+
+  .pressure-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .pressure-item {
+    padding: 1.25rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 3px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .pressure-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.4rem;
+  }
+
+  .pressure-body {
+    font-size: 0.85rem;
+    color: rgba(247,244,238,0.45);
+    line-height: 1.6;
+  }
+
+  /* ── CLOSING ────────────────────────────────────────── */
+  .closing-section {
+    padding: 6rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .closing-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.4;
+    margin-bottom: 3rem;
+  }
+
+  .team-row {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .team-member {
+    text-align: center;
+  }
+
+  .team-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+
+  .team-role {
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+
+  .team-org {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 0.2rem;
+  }
+
+  .contact-line {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
+
+  .contact-line a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .paper-ref {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border-gold);
+    font-size: 0.82rem;
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+    border-radius: 2px;
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────── */
+  footer {
+    background: var(--ink);
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  footer .logo { font-size: 1rem; }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ─────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideLine {
+    0% { left: -100%; }
+    50% { left: 0%; }
+    100% { left: 100%; }
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  .processing .layer-dot {
+    animation: pulse-dot 0.6s ease infinite;
+  }
+
+  /* ── MOBILE ─────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .hero-nav, .hero-body, .hero-footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .section, .arch-section, .demo-section, .gap-section, .context-section, .closing-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .demo-grid { grid-template-columns: 1fr; }
+    .context-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-stat-row { flex-direction: column; gap: 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .hero-badge { display: none; }
+    .team-row { gap: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-texture"></div>
+
+  <nav class="hero-nav">
+    <div class="logo">Maqasid<span>AI</span></div>
+    <div class="hero-badge">Working Prototype · June 2026</div>
+  </nav>
+
+  <div class="hero-body">
+    <div class="hero-eyebrow">AI Governance Infrastructure · GCC &amp; Islamic Finance</div>
+    <h1 class="hero-title">
+      Explainability<br>
+      is not<br>
+      <em>governance.</em>
+    </h1>
+    <p class="hero-sub">
+      A three-layer architecture for trustworthy AI deployment in Islamic financial markets, regulatory institutions, and high-trust GCC infrastructure — where existing frameworks fall short.
+    </p>
+    <div class="hero-stat-row">
+      <div class="hero-stat">
+        <div class="hero-stat-num">$6.7T</div>
+        <div class="hero-stat-label">Islamic finance assets by 2027</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">8</div>
+        <div class="hero-stat-label">Violation classes validated in real time</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">4</div>
+        <div class="hero-stat-label">Jurisprudential traditions covered</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-footer">
+    <div class="scroll-cue">
+      <div class="scroll-line"></div>
+      Scroll to explore
+    </div>
+  </div>
+</section>
+
+<!-- ── THE PROBLEM ───────────────────────────────────────── -->
+<section style="padding: 6rem 4rem; max-width: 1100px; margin: 0 auto;">
+  <div class="section-label">The Problem</div>
+  <h2 class="section-title">Two failures current<br>frameworks cannot see</h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2.5rem;">
+    <div style="padding: 2rem; border: 1px solid var(--border); border-top: 3px solid var(--crimson-light); background: white;">
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--crimson-light); margin-bottom: 1rem;">Failure Condition 1</div>
+      <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 0.75rem;">Output Inadmissibility</div>
+      <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.7;">The AI system produces outputs that are technically fluent and fully explained — but culturally, religiously, or financially inadmissible. A perfectly explained Riba-based recommendation is still haram. Explainability cannot catch this.</p>
+    </div>
+    <div style="padding: 2rem; border: 1px solid var(--border); border-top: 3px solid #D97706; background: white;">
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #D97706; margin-bottom: 1rem;">Failure Condition 2</div>
+      <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 0.75rem;">Decision-Condition Degradation</div>
+      <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.7;">The institutional environment receiving AI outputs degrades silently — overloaded escalation structures, eroding evaluative capacity, hollow governance authority. A flagged output entering a degraded environment produces a record, not a response.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── ARCHITECTURE ──────────────────────────────────────── -->
+<div class="arch-section">
+  <div class="arch-inner">
+    <div class="arch-label">The Architecture</div>
+    <h2 class="arch-title">Three non-overlapping layers.<br>One complete pipeline.</h2>
+    <p class="arch-sub">Each layer addresses a failure condition the other two cannot. Together they constitute the first end-to-end governed AI pipeline for high-trust institutional deployment.</p>
+
+    <div class="arch-stack" id="archStack">
+
+      <div class="arch-layer">
+        <div class="arch-layer-num">
+          <div class="layer-dot omnix"></div>
+          <div class="layer-num-text">L1</div>
+        </div>
+        <div class="arch-layer-content">
+          <div class="arch-layer-header">
+            <div class="arch-layer-name">OMNIX</div>
+            <div class="arch-layer-org">OMNIX Quantum Ltd · Harold Nunes</div>
+          </div>
+          <div class="arch-layer-question omnix">Can this action execute at all — provably, constrainedly, with quantum-resistant audit?</div>
+          <p class="arch-layer-desc">Execution boundary governance. A fail-closed layer with an anticipatory veto that issues a cryptographic block before any request arrives. Every governance artifact signed with post-quantum cryptography (Dilithium-3, FIPS 204). 174 architectural decisions. 64 formal invariants.</p>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <div class="arch-layer-num">
+          <div class="layer-dot maci"></div>
+          <div class="layer-num-text">L2</div>
+        </div>
+        <div class="arch-layer-content">
+          <div class="arch-layer-header">
+            <div class="arch-layer-name">MACI</div>
+            <div class="arch-layer-org">MaqasidAI · Syeda Beenish Fatima</div>
+          </div>
+          <div class="arch-layer-question maci">Is this output admissible — trustworthy enough to enter this institutional process?</div>
+          <p class="arch-layer-desc">Output admissibility governance. Real-time validation against Shariah criteria, regulatory requirements, and cultural alignment standards. Eight violation classes. Five Maqasid pillars. Four jurisprudential traditions (Hanafi, Maliki, Shafi'i, Hanbali). Sub-100ms latency. SHA-256 audit trail.</p>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <div class="arch-layer-num">
+          <div class="layer-dot hdi"></div>
+          <div class="layer-num-text">L3</div>
+        </div>
+        <div class="arch-layer-content">
+          <div class="arch-layer-header">
+            <div class="arch-layer-name">HDI</div>
+            <div class="arch-layer-org">Skilligen · Dr. Amanulla Khan</div>
+          </div>
+          <div class="arch-layer-question hdi">Is the human governance environment capable of legitimate response — and remaining stable under AI-scale acceleration?</div>
+          <p class="arch-layer-desc">Decision-condition governance. Conditions and preserves the structural integrity of the human governance environment receiving AI outputs. Designs authority boundaries, escalation legitimacy, and evaluative capacity preservation in advance — not as a post-hoc monitoring layer.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── LIVE DEMO ─────────────────────────────────────────── -->
+<div class="demo-section">
+  <div class="demo-inner">
+    <div class="section-label">MACI — Live Demonstration</div>
+    <h2 class="section-title">Four cases. Real outputs.<br>Real verdicts.</h2>
+    <p class="section-body" style="margin-bottom: 0;">Each case below represents an AI output entering an Islamic financial institution. Click any case to run MACI's admissibility evaluation.</p>
+
+    <div class="demo-grid" id="demoGrid">
+
+      <div class="demo-case" onclick="runDemo(this, 'flagged', 'Riba', 'CRITICAL', 'This output recommends a fixed guaranteed return on a debt instrument — a structural Riba violation under all four madhabs. The 8% guaranteed rate constitutes interest regardless of how the instrument is labelled.')">
+        <div class="demo-case-header">
+          <span class="demo-case-label">Case 01 · Investment Recommendation</span>
+          <span class="demo-verdict flagged" style="display:none">Flagged</span>
+        </div>
+        <div class="demo-case-body">
+          <div class="demo-input-text">"We recommend allocating 30% of the portfolio to this instrument, which offers a guaranteed 8% annual return based on historical yield metrics."</div>
+          <div class="demo-result">
+            <div class="demo-violation">
+              <span class="violation-class riba">RIBA</span>
+              <span class="violation-severity severity-critical">Critical</span>
+            </div>
+            <div class="demo-rationale"></div>
+          </div>
+          <div class="demo-cta">↓ Click to evaluate</div>
+        </div>
+      </div>
+
+      <div class="demo-case" onclick="runDemo(this, 'pass', 'Authentic', 'NONE', 'Sukuk al-Ijarah structures transfer ownership of an underlying asset, generating returns through lease payments rather than interest. This output accurately describes a Shariah-compliant structure and contains no admissibility violations.')">
+        <div class="demo-case-header">
+          <span class="demo-case-label">Case 02 · Sukuk Product Description</span>
+          <span class="demo-verdict pass" style="display:none">Pass</span>
+        </div>
+        <div class="demo-case-body">
+          <div class="demo-input-text">"This Bank Negara sukuk al-Ijarah structure transfers beneficial ownership of government assets to investors, with returns generated through lease payments under Shafi'i jurisprudence."</div>
+          <div class="demo-result">
+            <div class="demo-violation">
+              <span class="violation-class pass">AUTHENTIC</span>
+              <span class="violation-severity severity-none">No violation</span>
+            </div>
+            <div class="demo-rationale"></div>
+          </div>
+          <div class="demo-cta">↓ Click to evaluate</div>
+        </div>
+      </div>
+
+      <div class="demo-case" onclick="runDemo(this, 'blocked', 'FakeFatwa', 'HIGH', 'This output attributes a specific permissibility ruling to Sheikh Ibn Baz regarding cryptocurrency. No such ruling exists in verified scholarly databases. The attribution is fabricated. A fictitious fatwa entering an institutional decision process constitutes a critical governance failure regardless of the underlying question\'s legitimacy.')">
+        <div class="demo-case-header">
+          <span class="demo-case-label">Case 03 · Scholar Attribution</span>
+          <span class="demo-verdict blocked" style="display:none">Blocked</span>
+        </div>
+        <div class="demo-case-body">
+          <div class="demo-input-text">"According to Sheikh Ibn Baz's 2019 fatwa, Bitcoin trading is permissible under Hanbali jurisprudence provided the transaction involves immediate exchange."</div>
+          <div class="demo-result">
+            <div class="demo-violation">
+              <span class="violation-class fabricated">FAKE FATWA</span>
+              <span class="violation-severity severity-high">High</span>
+            </div>
+            <div class="demo-rationale"></div>
+          </div>
+          <div class="demo-cta">↓ Click to evaluate</div>
+        </div>
+      </div>
+
+      <div class="demo-case" onclick="runDemo(this, 'flagged', 'Gharar', 'MEDIUM', 'The cross-madhab flag indicates a genuine scholarly dispute. Maliki jurisprudence permits certain forms of Gharar Yasir under masalih mursala; Shafi\'i jurisprudence applies a stricter standard. This output cannot be classified without madhab-qualified specialist review. MACI routes to escalation rather than blocking, preserving legitimate scholarly complexity.')">
+        <div class="demo-case-header">
+          <span class="demo-case-label">Case 04 · Comparative Fiqh Analysis</span>
+          <span class="demo-verdict flagged" style="display:none">Escalate</span>
+        </div>
+        <div class="demo-case-body">
+          <div class="demo-input-text">"The Maliki position on bay' al-wafa permits this contract under necessity conditions via masalih mursala, though the Shafi'i view on gharar fahish leads to a different conclusion."</div>
+          <div class="demo-result">
+            <div class="demo-violation">
+              <span class="violation-class gharar">CROSS-MADHAB DISPUTE</span>
+              <span class="violation-severity" style="background:rgba(217,119,6,0.1);color:#D97706;font-family:'DM Mono',monospace;font-size:0.6rem;padding:0.15rem 0.5rem;border-radius:2px;">Specialist Required</span>
+            </div>
+            <div class="demo-rationale"></div>
+          </div>
+          <div class="demo-cta">↓ Click to evaluate</div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="run-btn" onclick="runAllDemos()">Run All Evaluations</button>
+  </div>
+</div>
+
+<!-- ── FRAMEWORK GAP TABLE ───────────────────────────────── -->
+<div class="gap-section">
+  <div class="section-label">Regulatory Gap Analysis</div>
+  <h2 class="section-title">Where existing frameworks fall short</h2>
+  <p class="section-body">No current framework addresses all three governance layers with operational precision. This is the gap this architecture fills.</p>
+
+  <table class="gap-table">
+    <thead>
+      <tr>
+        <th>Framework</th>
+        <th>Explainability</th>
+        <th>Output Admissibility</th>
+        <th>Decision-Condition Integrity</th>
+        <th>Shariah / Cultural Criteria</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>EU AI Act (2024)</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td>NIST AI RMF (2023)</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td>IEEE EAD</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td>NDAI / CBUAE (UAE)</td>
+        <td><span class="partial">Partial</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td>SAMA (Saudi Arabia)</td>
+        <td><span class="partial">Partial</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr class="highlight-row">
+        <td>OMNIX + MACI + HDI</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span class="check">✓</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── UAE CONTEXT ───────────────────────────────────────── -->
+<div class="context-section">
+  <div class="context-inner">
+    <div class="context-text">
+      <div class="arch-label">UAE Context</div>
+      <h2 class="arch-title" style="font-size: 2.2rem;">Why this matters<br>for the UAE now</h2>
+      <p style="font-size: 0.95rem; color: rgba(247,244,238,0.5); line-height: 1.75; margin-bottom: 1.5rem;">The UAE and broader GCC region presents the most compressed version of the governance challenge this architecture addresses. Three simultaneous pressures are active — and no existing framework addresses all three.</p>
+      <p style="font-size: 0.95rem; color: rgba(247,244,238,0.5); line-height: 1.75;">MACI + HDI + OMNIX is designed specifically for this environment: jurisdictionally aware, operationally precise, and structured for the institutional realities of UAE Vision 2031 and the markets it governs.</p>
+    </div>
+    <div class="pressure-list">
+      <div class="pressure-item">
+        <div class="pressure-title">AI Adoption Velocity</div>
+        <div class="pressure-body">UAE Vision 2031 mandates AI integration across government, finance, and healthcare at a pace that substantially outstrips governance maturity. Deployment is ahead of regulation.</div>
+      </div>
+      <div class="pressure-item">
+        <div class="pressure-title">Islamic Finance Governance</div>
+        <div class="pressure-body">USD 6.7 trillion in Islamic finance assets by 2027. Shariah governance boards cannot review AI outputs at inference speed. The gap between approval structures and execution velocity is structurally unaddressed.</div>
+      </div>
+      <div class="pressure-item">
+        <div class="pressure-title">Sovereign Institutional Continuity</div>
+        <div class="pressure-body">GCC governance institutions face modernisation pressure alongside AI adoption simultaneously. The risk of governance becoming formally present but operationally hollow is acute where transformation velocity is high.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CLOSING ───────────────────────────────────────────── -->
+<div class="closing-section">
+  <p class="closing-quote">"A governance framework that can explain every decision but cannot determine whether those decisions were admissible is not a governed system — it is a documented one."</p>
+
+  <div class="team-row">
+    <div class="team-member">
+      <div class="team-name">Syeda Beenish Fatima</div>
+      <div class="team-role">Founder · MACI Architecture</div>
+      <div class="team-org">MaqasidAI</div>
+    </div>
+    <div class="team-member">
+      <div class="team-name">Dr. Amanulla Khan</div>
+      <div class="team-role">HDI Architecture · Decision Governance</div>
+      <div class="team-org">Skilligen HDI</div>
+    </div>
+    <div class="team-member">
+      <div class="team-name">Harold Nunes</div>
+      <div class="team-role">Execution Boundary · OMNIX</div>
+      <div class="team-org">OMNIX Quantum Ltd</div>
+    </div>
+  </div>
+
+  <div class="contact-line">
+    <a href="mailto:contact@maqasidai.org">contact@maqasidai.org</a>
+    &nbsp;·&nbsp; maqasidai.org
+    &nbsp;·&nbsp; Working Paper: <em>Beyond Explainability</em> — Co-authorship with Dr. Amanulla Khan, in preparation
+  </div>
+
+  <div class="paper-ref">
+    Working Paper · Beyond Explainability: Output Admissibility and Decision-Condition Integrity as the Missing Layers of AI Governance
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="logo">Maqasid<span>AI</span></div>
+  <div class="footer-copy">© 2026 MaqasidAI · Working Prototype · Not for Distribution</div>
+</footer>
+
+<script>
+  function runDemo(el, verdict, violationClass, severity, rationale) {
+    const verdictEl = el.querySelector('.demo-verdict');
+    const resultEl = el.querySelector('.demo-result');
+    const rationaleEl = el.querySelector('.demo-rationale');
+    const ctaEl = el.querySelector('.demo-cta');
+
+    el.classList.add('active');
+    verdictEl.style.display = 'inline-block';
+    resultEl.classList.add('visible');
+    rationaleEl.textContent = rationale;
+    ctaEl.style.display = 'none';
+
+    // Animate result in
+    resultEl.style.opacity = '0';
+    resultEl.style.transform = 'translateY(8px)';
+    setTimeout(() => {
+      resultEl.style.transition = 'all 0.4s ease';
+      resultEl.style.opacity = '1';
+      resultEl.style.transform = 'translateY(0)';
+    }, 50);
+  }
+
+  function runAllDemos() {
+    const cases = document.querySelectorAll('.demo-case');
+    cases.forEach((c, i) => {
+      setTimeout(() => c.click(), i * 300);
+    });
+  }
+
+  // Scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.arch-layer, .demo-case, .pressure-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
